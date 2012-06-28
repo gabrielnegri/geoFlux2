@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
+	id="com.fluxit.geoflux" version="1.0.0">
+
+	<!-- basicas -->
+	<name>geoFlux</name>
+	<description>geoFlux is a crossplatform client.</description>
+	<author href="http://www.fluxit.com.ar">FluxIT</author>
+
+	<!-- Splash screen e icono -->
+	<gap:splash src="splash.png" />
+	<icon src="icon.jpg" gap:role="default" />
+
+	<!-- permisos -->
+	<feature name="http://api.phonegap.com/1.0/battery" />
+	<feature name="http://api.phonegap.com/1.0/camera" />
+	<feature name="http://api.phonegap.com/1.0/contacts" />
+	<feature name="http://api.phonegap.com/1.0/file" />
+	<feature name="http://api.phonegap.com/1.0/geolocation" />
+	<feature name="http://api.phonegap.com/1.0/media" />
+	<feature name="http://api.phonegap.com/1.0/network" />
+	<feature name="http://api.phonegap.com/1.0/notification" />
+	
+	<!-- Particular para BB -->
+	<feature id="blackberry.system.event" version="1.0.0"/>
+
+	<!-- avanzado y preferencias -->
+	<access origin="http://fluxit.com.ar" subdomains="true" />
+</widget>

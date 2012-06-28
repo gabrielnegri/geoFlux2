@@ -1,0 +1,25 @@
+@CHARSET "UTF-8";
+
+body {
+	background-color: black !important height:  100%;
+}
+
+#map {
+	height: 300px;
+}
+
+.underline {
+	text-decoration: underline;
+}
+
+.center {
+	text-align: center;
+}
+
+a.fav {
+	color: #DAA520 !important;
+}
+
+.center {
+	text-align: center;
+}

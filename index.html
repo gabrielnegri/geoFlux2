@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+<!-- FLUXIT Mobile FWK: Librerías BASE -->
+<script type="text/javascript" src="cordova-1.6.1.js"></script>
+<script type="text/javascript" src="include/jquery-1.7.2.min.js"></script>
+
+<!-- Inicialización del dispositivo -->
+<script type="text/javascript" src="include/fluxit-mobile-init.js"></script>
+
+<script type="text/javascript" src="include/jquery.mobile-1.1.0.min.js"></script>
+
+<!-- Librerías de Google MAPs -->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" src="include/jquery.ui.map.full.min.js"></script>
+<!-- <script type="text/javascript" src="include/markerclusterer.min.js"></script> -->
+
+<!-- Librerías de negocio de la aplicación  -->
+<script type="text/javascript" src="include/fluxit-mobile-poi-backend.js"></script>
+
+<!-- Hojas de estilos base -->
+<link rel="stylesheet" href="include/jquery.mobile-1.1.0.min.css" />
+<link rel="stylesheet" href="include/jquery.mobile.structure-1.1.0.min.css" />
+<!--  Hojas de estilo de la aplicación -->
+<link rel="stylesheet" href="include/style.css" />
+
+<script type="text/javascript">
+</script>
+
+</head>
+<body>
+	<!--  Index principal con el MENU de la aplicación -->
+	<div data-role="page" id="init" >
+		<div data-role="header">
+			<a href="#config" data-icon="gear" data-iconpos="notext"
+				class="ui-btn-right"></a> <span class="ui-title">GeoFlux</span>
+		</div>
+		<div data-role="content">
+			<a href="#list" data-role="button">Lista entidades</a> 
+			<a href="#map" data-role="button">Ver en mapa</a>
+			<a href="#search" data-role="button">Buscar</a> 
+			<a href="#register" data-role="button">Registrar</a> 
+			<br/>
+			<div id="mensajesHome"></div>
+			<div style="text-align: center;">
+				<img src="img/fluxit.jpg" alt="FluxIT" />
+			</div>
+		</div>
+	</div>
+	
+	<!--  PAGINA CON VISTA DE LISTA -->
+	<div data-role="page" id="list" >
+		<div data-role="header" data-position="fixed">
+			<a href="#init" data-icon="home" data-iconpos="notext"
+				data-rel="back" >Volver</a> <span
+				class="ui-title">Lista entidades</span>
+		</div>
+		<div data-role="contentlist">
+			<div class="content-primary">
+				<ul data-role="listview" id="poilist">
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<!--  PAGINA CON VISTA DE MAPA -->
+	<div data-role="page" id="map" >
+		<div data-role="header" data-position="inline">
+			<a href="#init" data-icon="home" data-iconpos="notext"
+				 >Volver</a> <span
+				class="ui-title">Mapa</span>
+				<a data-icon="star" data-iconpos="notext" class="ui-btn-right" id="buttonLocation"></a>
+		</div>
+		<div data-role="content" style="position: absolute; width: 100%; height: 100%; padding: 0;">
+			<div id="map_canvas" style="width: 100%; height: 100%;"></div>
+			
+		</div>
+	</div>
+	
+	<!--  PAGINA PARA REALIZAR BÚSQUEDA -->	
+	<div data-role="page" id="search" >
+		<div data-role="header">
+			<a href="#init" data-icon="home" data-iconpos="notext"
+				data-rel="back" >Volver</a> <span
+				class="ui-title">Buscar</span>
+		</div>
+		<div id="content">
+			<div data-role="content">
+				<form action="#" method="post">
+					<label for="basic">Texto:</label> <input type="text"
+						name="search_text" id="search_text" /><br /> <label
+						for="category" class="select">Categoría:</label> <select
+						name="search_category" id="search_category">
+						<option value="" selected>Todas</option>
+					</select> <br /> <a href="#" data-role="button" data-icon="search"
+						data-iconpos="right" id="search_button">Buscar</a>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+
+	<!--  PAGINA CON VISTA DE UN POI -->
+	<div data-role="page" id="poi"  >
+		<div data-role="header" data-position="fixed">
+			
+			<a data-icon="back" data-iconpos="notext" data-rel="back" >Volver</a>
+			 
+			<span class="ui-title" id="poi-title">Información POI</span>
+				<a data-icon="forward" data-iconpos="notext" class="ui-btn-right" id="buttonInMap"></a>
+		</div>
+			<div data-role="content">
+				
+					<strong id="poi-nombre"></strong> 
+					<input type="checkbox" name="buttonFav" data-inline="true" id="buttonFav" data-role="none" /><br />
+					
+					<label for="basic">Categoría: </label><span id="poi-categoria"></span> <br/>
+					<label for="basic">Descripcion: </label><span id="poi-descripcion"></span> <br/>
+					<label for="basic">Teléfono: </label><a id="poi-tel"></a> <br/>
+					<label for="basic">Direccion: </label><span id="poi-direccion"></span> <br/>
+					<label for="basic">WebPage: </label><a href="#" target="_blank" rel="external" id="poi-web"></a> <br/>
+					<div class="center">
+						<img src="" id="poi-image">
+					</div>
+					<div data-role="collapsible">
+						<h3>Características</h3>
+						<div id="caracteristicas"></div>
+					</div>
+					<div data-role="collapsible">
+   						<h3>Valoraciones</h3>
+   						<div id="valoraciones"></div>
+					</div>
+					<div data-role="collapsible">
+   						<h3>Valorar</h3>
+						<form action="#" method="post" id="formValoracion">
+					
+						</form>
+						<a href="#" data-role="button" data-iconpos="right" id="sendValoracion">Votar</a>
+					</div>
+				</div>
+	</div>
+
+	<!-- PAGINA CON VISTA DE CONFIGURACION DE LA APLICACION -->
+	<div data-role="page" id="config" >
+		<div data-role="header">
+			<a href="#init" data-icon="home" data-iconpos="notext"
+				data-rel="back" >Volver</a> <span
+				class="ui-title">Configuración</span>
+		</div>
+		<div id="content">
+				<form action="#" method="post">
+					<label for="config_theme" class="select">Tema:</label> <select
+						name="config_theme" id="config_theme">
+						<option value="a">A</option>
+						<option value="b">B</option>
+						<option value="c">C</option>
+						<option value="d">D</option>
+						<option value="e">E</option>
+					</select> <br /> 
+					<a href="#" data-role="button" data-icon="check"
+						data-iconpos="right" id="config_button">Guardar</a>
+				</form>
+		</div>
+		<div data-role="content"></div>
+	</div>
+	
+	<!--  Pagina para registrar-->
+	<div data-role="page" id="register"  >
+		<div data-role="header">
+			<a href="#init" data-icon="home" data-iconpos="notext" data-rel="back" >Volver</a>
+			<span class="ui-title" id="poi-title">Registro de usuario</span>
+		</div>
+			<div data-role="content">
+					<form action="#" method="post" id="formRegistracion">
+						<label for="basic">Username: </label>
+						<input type="text" name="userName" id="userName" />
+						<a href="#" data-role="button" data-iconpos="right" onclick="registrarUsuario()">Registrar</a><br/>
+						Por ahora lo guarda en el storage local
+					</form>
+					
+				</div>
+	</div>
+	
+	<!--  PAGINA CON RESULTADOS de BUSQUEDA -->
+	<div data-role="page" id="result" >
+		<div data-role="header" data-position="fixed">
+			<a data-icon="home" data-iconpos="notext" data-rel="back">Volver</a> <span
+				class="ui-title">Resultado de búsqueda</span>
+		</div>
+		<div data-role="contentlist">
+			<div class="content-primary">
+				<ul data-role="listview" id="poilistresult">
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+
+		$('#valorar').collapsible({
+			expand: function(event, ui) {
+				$('#formValoracion').appendTo('.ui-page').trigger('create');
+			}
+		});
+	
+		$('#map').live('pageinit', function() {
+			var pos = {'center': CURRENT_LOCATION, 'zoom': 16};
+			$('#map_canvas').gmap({
+					center: pos.center,
+					zoom: pos.zoom,
+					streetViewControl: false,
+					zoomControlOptions: { 
+						position: google.maps.ControlPosition.TOP_LEFT, 
+						style: google.maps.ZoomControlStyle.SMALL },
+					callback: function(){
+					}
+			});
+			map = $('#map_canvas').gmap('get','map');
+			zoom =  map.getZoom();
+			//alert(zoom / 200);
+			CURRENT_DISTANCE =zoom / 4; 
+			
+		});
+		
+		$('#map').live('pageshow', function(e) {
+			 	$.mobile.showPageLoadingMsg();
+			 	//alert("DISTANCE "+CURRENT_DISTANCE);
+			 	// tomar ubicación si está seteada
+				loadMap();
+			}
+		);
+
+		$('#map').bind('orientationchange pageshow resize', function() {
+			// Redimensionar mapa al mostrar
+			var content, contentHeight, footer, header, viewportHeight;
+		    window.scroll(0, 0);
+		    header = $(":jqmData(role='header'):visible");
+		    footer = $(":jqmData(role='footer'):visible");
+		    content = $(":jqmData(role='content'):visible");
+		    viewportHeight = $(window).height();
+		    contentHeight = viewportHeight - header.outerHeight() - footer.outerHeight();
+		    $("article:jqmData(role='content')").first().height(contentHeight);
+		    $("#map").height(contentHeight);
+		});
+
+		$("#buttonLocation").click(function (e) {
+		    showMyLocation();
+		});
+
+		$("#sendValoracion").click(function (e) {
+			enviarValoracion();
+		});
+
+		$('#config').live('pageshow', function(e) {
+			$('#config_theme').val(window.localStorage.getItem("theme"));
+		});
+		$('#config_button').click(function (e) {
+			saveConfig();
+		});
+		
+
+		$("#buttonInMap").click(function (e) {
+			// Mostrar poi en mapa
+			showCurrentPoiInMap = true;
+			$.mobile.changePage("#map");
+		});
+
+		$("#buttonFav").click(function (e) {
+			// Añadir a favoritos
+			if(currentPoi.favorite){
+				navigator.notification.confirm('Remover de favoritos?', function(index){
+					if(index == 1)
+						removeFromFavoritos(currentPoi);
+					else
+						$("#buttonFav").attr('checked', true);
+				}, 'Favoritos', 'Si,Cancelar');
+			}
+			else{
+				navigator.notification.confirm('Agregar a favoritos?', function(index){
+					if(index == 1)
+						addToFavoritos(currentPoi);
+					else
+						$("#buttonFav").attr('checked', false);
+				}, 'Favoritos', 'Si,Cancelar');
+			}				
+		});
+
+		$('#search_button').click(function (e) {
+			findPois($('#search_text').val(), $('#search_category').val());
+		});
+		
+		$('#list').live('pageshow', function() {
+		    $.mobile.showPageLoadingMsg();
+		    callPoiList();
+		});
+
+		$('#register').live('pageshow', function() {
+			console.log('Usuario '+obtenerUserNameRegistrado());
+			$('#userName').val(obtenerUserNameRegistrado());
+		});
+
+		$('#poi').live('pageshow', function(e) {
+			id = $(e.target).attr("data-url").replace(/.*id=/, "");
+			
+		    $.mobile.showPageLoadingMsg();
+		    fillPoiInformation(id);
+		});
+		
+		
+		$('#search').live('pageshow', function() {
+			// obtener categorías, no las tengo.
+			// call loadCategories
+		});
+		
+		$('#result').live('pageshow', function(e) {
+			 	$.mobile.showPageLoadingMsg();
+				loadListResult();
+			}
+		);
+		
+		$('#config').live('pageshow', function() {
+			
+			testCalcularDistancia();
+		});
+
+		$('#init').live('pageinit', function() {
+			$('#init').children()
+	            .attr('data-theme', THEME);
+		});
+
+		$('#init').live('pageshow', function() {
+			$('#mensajesHome').text('')
+			console.log('Page HOME show');
+			var userName = 	obtenerUserNameRegistrado();
+			if (userName != null && userName != ''){
+				var p = $("<p/>").addClass('center').text('Bienvenido '+userName);
+			}else {
+				var p = $("<p/>").addClass('center').text('No hay usuario registrado');
+			}
+
+			$('#mensajesHome').append(p)
+
+			console.log('Usuario '+obtenerUserNameRegistrado());
+
+
+		});	
+		
+	</script>
+</body>
+
+</html>
